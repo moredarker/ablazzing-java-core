@@ -4,7 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-    static String maskData(String line) {
+    public static void main(String[] args) {
+        String line = "<client>(Какие то данные)<data>my.mail@rambler.ru;Сидоров Василий Петрович;79876453210</data></client>";
+        System.out.println(maskData(line));
+    }
+
+    public static String maskData(String line) {
         Pattern tag = Pattern.compile("<data>(.*?)</data>");
         Matcher data = tag.matcher(line);
         String result = data.find() ? data.group(1) : "";
