@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
-        String line = "<client>(Какие то данные)<data>my.mail@rambler.ru;Сидоров Василий Петрович;79876453210</data></client>";
+        String line = "<client>(Какие то данные)<data>;Сидоров Василий Петрович;</data></client>";
         System.out.println(maskData(line));
     }
 
@@ -20,22 +20,22 @@ public class Main {
 
         while (items.find()) {
             String current = items.group();
-            String firstChar = current.substring(0, 1);
 
-            if (Pattern.matches("\\d", firstChar)) {
+            if (current.matches("[\\d]{11}")) {
                 output.add(current.replaceFirst("(\\d{4})(\\d{3})(\\d*)", String.format("$1%s$3", "*".repeat(3))));
-            } else if (Pattern.matches("[А-Я]", firstChar)) {
+            } else if (current.matches("[А-ЯA-zа-яa-b\\s]*")) {
                 String[] names = current.split(" ");
-                String lastName = names[0];
-                names[0] = lastName.charAt(0) + "*".repeat(lastName.length() - 2) + lastName.substring(lastName.length() - 1);
+                Pattern p = Pattern.compile("([А-ЯA-Z])([а-яa-z]*)([а-яa-z]{1}$)");
+                Matcher name = p.matcher(names[0]);
+                names[0] = name.find() ? name.group(1) +
+                        "*".repeat(name.end(2) - name.start(2)) + name.group(3) : "";
                 names[2] = names[2].charAt(0) + ".";
                 output.add(String.join(" ", names));
-            } else if (Pattern.matches("[a-z]", firstChar)) {
-                String[] parts = current.split("[@]+");
-                StringBuilder left = new StringBuilder(parts[0]);
-                left.setCharAt(left.length() - 1, '*');
-                String right = "*".repeat(parts[1].indexOf("."));
-                output.add(left + "@" + right + parts[1].substring(parts[1].indexOf(".")));
+            } else if (current.matches(".+@.+")) {
+                int begin = current.indexOf('@') + 1;
+                int end = current.indexOf('.', begin);
+                String replacement = "*@" + "*".repeat(end-begin);
+                output.add(current.replaceAll("([\\w.-_](?=@))@([\\w_-]+(?=.))", replacement));
             }
         }
 

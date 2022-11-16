@@ -29,7 +29,11 @@ public class MainTest {
                 ),
                 Arguments.of(
                 "<client>(Какие то данные)<data>Иванов Иван Иванович;79991113344;my_mail@gmail.com</data></client>",
-                "<client>(Какие то данные)<data>И****в Иван И.;7999***3344;my_mai*@*****.com</data></client>")
+                "<client>(Какие то данные)<data>И****в Иван И.;7999***3344;my_mai*@*****.com</data></client>"),
+                Arguments.of(
+                "<client>(Какие то данные)<data>;Сидоров Василий Петрович;</data></client>",
+                "<client>(Какие то данные)<data>С*****в Василий П.</data></client>"
+                )
                 );
     }
 }
