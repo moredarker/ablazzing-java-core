@@ -6,9 +6,10 @@ public class SpecialNumbers {
         var data = GeneratorExpertHomework.getData();
         Set<String> specials = new HashSet<>();
 
-        for (var outer : data.entrySet()) {
-            for (var inner : outer.getValue().entrySet()) {
-                for (String number : inner.getValue()) {
+        //итерироваться по entrySet() избыточно для задачи?
+        for (var outer : data.values()) {
+            for (var inner : outer.values()) {
+                for (String number : inner) {
                     if (number.matches("М[\\d]{3}АВ[\\d]{2,3}")) {
                         specials.add(number);
                     }
