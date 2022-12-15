@@ -28,7 +28,7 @@ public class Main {
             order = String.format("%02d", i);
             filename = left + order + right;
             //метод для решения первой задачи
-            getIncome(filename, order);
+            getProfit(filename, order);
             //метод для заполнения мапы расходов для второй задачи
             getExpenses(filename, shops);
         }
@@ -40,21 +40,23 @@ public class Main {
                     " за весь период: " + new DecimalFormat("###,###.##").format(record.getValue()));
     }
 
-    public static void getIncome(String filename, String order) throws IOException {
+    public static void getProfit(String filename, String order) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(path + "/" + filename))) {
             String line;
-            double income = 0;
+            double income = 0, expense = 0;
 
             while (reader.ready()) {
                 line = reader.readLine();
                 if (line.startsWith("pyterochka")) {
                     int begin = line.indexOf(";") + 1;
-                    int end = line.indexOf(";", begin);
-                    income += Double.parseDouble(line.substring(begin, end));
+                    int mid = line.indexOf(";", begin);
+                    int end = line.indexOf(";", mid + 1);
+                    income += Double.parseDouble(line.substring(begin, mid));
+                    expense += Double.parseDouble(line.substring(mid + 1, end));
                 }
             }
 
-            System.out.println(order + "." + DataGenerator.getYear() + ": " + new DecimalFormat("###,###.##").format(income));
+            System.out.println(order + "." + DataGenerator.getYear() + ": " + new DecimalFormat("###,###.##").format(income - expense));
         }
     }
 
